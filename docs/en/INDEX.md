@@ -6,7 +6,9 @@ class MyClass extends WhateverWithViewableDataAsOneParentClass
 {
     public function DebugMe($anything)
     {
-        echo Vardump::mixed_to_ul($anything);
+        if (Vardump::inst()->isSafe()) {
+            return Vardump::inst()->vardumpMe($this->{$method}(), $method);
+        }
     }
 }
 ```

@@ -6,14 +6,41 @@ use SilverStripe\Control\Director;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
+use SilverStripe\Core\Environment;
 
 class Vardump
 {
-    public static function mixed_to_ul($mixed): string
+
+    protected static $singleton = null;
+
+    public static function inst()
     {
-        if (Permission::check('ADMIN') && Director::isDev()) {
+        if(self::$singleton === null) {
+            self::$singleton = new self();
+        }
+        return self::$singleton;
+    }
+
+    public function isSafe(): bool
+    {
+        return (Permission::check('ADMIN') && Director::isDev()) || Environment::getEnv('SS_VARDUMP_DEBUG_ALLOWED');
+    }
+
+    public function vardumpMe($data, string $method)
+    {
+        if (Vardump::inst()->isSafe()) {
+            $html = Vardump::inst()->mixedToUl($data) .$this->addMethodInformation($method);
+            return DBField::create_field('HTMLText', $html);
+        }
+    }
+
+
+    protected function mixedToUl($mixed): string
+    {
+        if ($this->isSafe()) {
             if ($mixed === false) {
                 return '<span style="color: grey">[NO]</span>';
             } elseif ($mixed === true) {
@@ -26,18 +53,18 @@ class Vardump
                 return '<span style="color: grey">[EMPTY ARRAY]</span>';
             } elseif (is_object($mixed)) {
                 if ($mixed instanceof ArrayData) {
-                    return self::mixed_to_ul($mixed->toMap());
+                    return $this->mixedToUl($mixed->toMap());
                 } elseif ($mixed instanceof ArrayList) {
-                    return self::mixed_to_ul($mixed->toArray());
+                    return $this->mixedToUl($mixed->toArray());
                 } elseif ($mixed instanceof DataList) {
-                    return self::mixed_to_ul($mixed->map('ID', 'Title')->toArray());
+                    return $this->mixedToUl($mixed->map('ID', 'Title')->toArray());
                 } elseif ($mixed instanceof DataObject) {
                     return $mixed->i18n_singular_name() . ': ' . $mixed->getTitle() . ' (' . $mixed->ClassName . ', ' . $mixed->ID . ')';
                 }
                 return print_r($mixed, 1);
             } elseif (is_array($mixed)) {
                 $html = '';
-                $isAssoc = self::isAssoc($mixed);
+                $isAssoc = $this->isAssoc($mixed);
                 $count = count($mixed);
                 $isLarge = false;
                 if ($count > 1) {
@@ -57,7 +84,7 @@ class Vardump
                     if ($isAssoc) {
                         $keyString = '<strong>' . $key . '</strong>: ';
                     }
-                    $html .= '<li style="' . $style . '">' . $keyString . $countStr . self::mixed_to_ul($item) . $after . '</li>';
+                    $html .= '<li style="' . $style . '">' . $keyString . $countStr . $this->mixedToUl($item) . $after . '</li>';
                 }
                 return $html . '</ul>';
             }
@@ -67,11 +94,21 @@ class Vardump
         }
     }
 
-    protected static function isAssoc(array $arr)
+    protected function isAssoc(array $arr)
     {
         if ($arr === []) {
             return false;
         }
         return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+
+    protected function addMethodInformation($method)
+    {
+        return '
+            <div style="color: blue; font-size: 12px; margin-top: 0.7rem;">
+                ⇒' . static::class . '::<strong>' . $method . '</strong>
+            </div>
+            <hr style="margin-bottom: 2rem;"/>
+        ';
     }
 }

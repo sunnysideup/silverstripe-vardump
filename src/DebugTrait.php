@@ -3,12 +3,14 @@
 namespace Sunnysideup\Vardump;
 
 use SilverStripe\Security\Permission;
+use Sunnysideup\Vardump\Vardump;
 
 /**
  * small trait to make non-Viewable objects printable.
  */
 trait DebugTrait
 {
+
     /**
      * Get the value of a field on this object, automatically inserting the value into any available casting objects
      * that have been specified.
@@ -21,10 +23,9 @@ trait DebugTrait
      */
     public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null)
     {
-        if (Permission::check('ADMIN')) {
+        if (Vardump::inst()->isSafe()) {
             $data = call_user_func_array([$this, $fieldName], $arguments ?: []);
-            return Vardump::mixed_to_ul($data) .
-            $this->addMethodInformation($method);
+            return Vardump::inst()->vardumpMe($data, $method);
         }
     }
 
@@ -34,12 +35,12 @@ trait DebugTrait
      */
     public function XML_val(?string $method, $arguments = [])
     {
-        if (Permission::check('ADMIN')) {
+        if (Vardump::inst()->isSafe()) {
             if (! is_array($arguments)) {
                 $arguments = [$arguments];
             }
-            return $this->arrayToUl($this->{$method}(...$arguments)) .
-                $this->addMethodInformation($method);
+            $data = $this->{$method}(...$arguments);
+            return Vardump::inst()->vardumpMe($data, $method);
         }
     }
 
@@ -48,13 +49,5 @@ trait DebugTrait
         return static::class;
     }
 
-    protected function addMethodInformation($method)
-    {
-        return '
-            <div style="color: blue; font-size: 12px; margin-top: 0.7rem;">
-                ⇒' . static::class . '::<strong>' . $method . '</strong>
-            </div>
-            <hr style="margin-bottom: 2rem;"/>
-        ';
-    }
+
 }
