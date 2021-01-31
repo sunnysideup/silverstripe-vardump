@@ -7,6 +7,8 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
+
+use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
 use SilverStripe\Core\Environment;
@@ -29,10 +31,11 @@ class Vardump
         return (Permission::check('ADMIN') && Director::isDev()) || Environment::getEnv('SS_VARDUMP_DEBUG_ALLOWED');
     }
 
-    public function vardumpMe($data, string $method)
+    public function vardumpMe($data, string $method, string $className)
     {
         if (Vardump::inst()->isSafe()) {
-            $html = Vardump::inst()->mixedToUl($data) .$this->addMethodInformation($method);
+            $html = Vardump::inst()->mixedToUl($data) . $this->addMethodInformation($method, $className);
+
             return DBField::create_field('HTMLText', $html);
         }
     }
@@ -56,7 +59,7 @@ class Vardump
                     return $this->mixedToUl($mixed->toMap());
                 } elseif ($mixed instanceof ArrayList) {
                     return $this->mixedToUl($mixed->toArray());
-                } elseif ($mixed instanceof DataList) {
+                } elseif ($mixed instanceof DataList || $mixed instanceof PaginatedList) {
                     return $this->mixedToUl($mixed->map('ID', 'Title')->toArray());
                 } elseif ($mixed instanceof DataObject) {
                     return $mixed->i18n_singular_name() . ': ' . $mixed->getTitle() . ' (' . $mixed->ClassName . ', ' . $mixed->ID . ')';
@@ -102,11 +105,11 @@ class Vardump
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
-    protected function addMethodInformation($method)
+    protected function addMethodInformation($method, $className)
     {
         return '
             <div style="color: blue; font-size: 12px; margin-top: 0.7rem;">
-                ⇒' . static::class . '::<strong>' . $method . '</strong>
+                ⇒' . $className . '::<strong>' . $method . '</strong>
             </div>
             <hr style="margin-bottom: 2rem;"/>
         ';

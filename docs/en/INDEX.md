@@ -7,7 +7,7 @@ class MyClass extends WhateverWithViewableDataAsOneParentClass
     public function DebugMe($anything)
     {
         if (Vardump::inst()->isSafe()) {
-            return Vardump::inst()->vardumpMe($this->{$method}(), $method);
+            return Vardump::inst()->vardumpMe($this->{$method}(), $method, get_called_class());
         }
     }
 }

@@ -25,7 +25,7 @@ trait DebugTrait
     {
         if (Vardump::inst()->isSafe()) {
             $data = call_user_func_array([$this, $fieldName], $arguments ?: []);
-            return Vardump::inst()->vardumpMe($data, $method);
+            return Vardump::inst()->vardumpMe($data, $method, get_called_class());
         }
     }
 
@@ -40,7 +40,7 @@ trait DebugTrait
                 $arguments = [$arguments];
             }
             $data = $this->{$method}(...$arguments);
-            return Vardump::inst()->vardumpMe($data, $method);
+            return Vardump::inst()->vardumpMe($data, $method, get_called_class());
         }
     }
 
