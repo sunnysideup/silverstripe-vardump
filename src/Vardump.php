@@ -1,17 +1,16 @@
 <?php
+
 namespace Sunnysideup\Vardump;
 
+use SilverStripe\Control\Director;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
-use SilverStripe\Control\Director;
-
 
 class Vardump
 {
-
     public static function mixed_to_ul($mixed): string
     {
         if (Permission::check('ADMIN') && Director::isDev()) {
@@ -33,16 +32,15 @@ class Vardump
                 } elseif ($mixed instanceof DataList) {
                     return self::mixed_to_ul($mixed->map('ID', 'Title')->toArray());
                 } elseif ($mixed instanceof DataObject) {
-                    return $mixed->i18n_singular_name() . ': '.$mixed->getTitle() . ' ('.$mixed->ClassName.', '.$mixed->ID.')';
-                } else {
-                    return print_r($mixed, 1);
+                    return $mixed->i18n_singular_name() . ': ' . $mixed->getTitle() . ' (' . $mixed->ClassName . ', ' . $mixed->ID . ')';
                 }
+                return print_r($mixed, 1);
             } elseif (is_array($mixed)) {
                 $html = '';
                 $isAssoc = self::isAssoc($mixed);
                 $count = count($mixed);
                 $isLarge = false;
-                if($count > 1) {
+                if ($count > 1) {
                     $html .= '' . count($mixed) . ' entries ... ';
                     $isLarge = count($mixed) > 20;
                 }

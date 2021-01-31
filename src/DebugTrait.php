@@ -2,11 +2,7 @@
 
 namespace Sunnysideup\Vardump;
 
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Permission;
-use SilverStripe\View\ArrayData;
 
 /**
  * small trait to make non-Viewable objects printable.
@@ -42,20 +38,9 @@ trait DebugTrait
             if (! is_array($arguments)) {
                 $arguments = [$arguments];
             }
-            return
-                $this->arrayToUl($this->{$method}(...$arguments)) .
+            return $this->arrayToUl($this->{$method}(...$arguments)) .
                 $this->addMethodInformation($method);
         }
-    }
-
-    protected function addMethodInformation($method)
-    {
-        return '
-            <div style="color: blue; font-size: 12px; margin-top: 0.7rem;">
-                ⇒' . get_class($this) . '::<strong>' . $method . '</strong>
-            </div>
-            <hr style="margin-bottom: 2rem;"/>
-        ';
     }
 
     public function ClassName(): string
@@ -63,4 +48,13 @@ trait DebugTrait
         return static::class;
     }
 
+    protected function addMethodInformation($method)
+    {
+        return '
+            <div style="color: blue; font-size: 12px; margin-top: 0.7rem;">
+                ⇒' . static::class . '::<strong>' . $method . '</strong>
+            </div>
+            <hr style="margin-bottom: 2rem;"/>
+        ';
+    }
 }
