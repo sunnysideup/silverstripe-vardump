@@ -62,6 +62,8 @@ class Vardump
                 return $html . '</ul>';
             }
             return '<span style="color: green">' . $mixed . '</span>';
+        } else {
+            return 'not available';
         }
     }
 
