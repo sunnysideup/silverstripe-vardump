@@ -16,6 +16,22 @@ use SilverStripe\Core\Environment;
 class Vardump
 {
 
+
+    /**
+     * @var array
+     *            List of words to be replaced.
+     */
+    private const SQL_PHRASES = [
+        'SELECT',
+        'FROM',
+        'WHERE',
+        'HAVING',
+        'GROUP',
+        'ORDER BY',
+        'INNER JOIN',
+        'LEFT JOIN',
+    ];
+
     protected static $singleton = null;
 
     public static function inst()
@@ -41,7 +57,7 @@ class Vardump
     }
 
 
-    protected function mixedToUl($mixed): string
+    public function mixedToUl($mixed): string
     {
         if ($this->isSafe()) {
             if ($mixed === false) {
@@ -60,9 +76,13 @@ class Vardump
                 } elseif ($mixed instanceof ArrayList) {
                     return $this->mixedToUl($mixed->toArray());
                 } elseif ($mixed instanceof DataList || $mixed instanceof PaginatedList) {
-                    return $this->mixedToUl($mixed->map('ID', 'Title')->toArray());
+                    return
+                        $this->mixedToUl($mixed->sql()) . '<hr />' .
+                        $this->mixedToUl($mixed->map('ID', 'Title')->toArray());
                 } elseif ($mixed instanceof DataObject) {
-                    return $mixed->i18n_singular_name() . ': ' . $mixed->getTitle() . ' (' . $mixed->ClassName . ', ' . $mixed->ID . ')';
+                    return
+                        $mixed->i18n_singular_name() . ': ' . $mixed->getTitle() .
+                        ' (' . $mixed->ClassName . ', ' . $mixed->ID . ')';
                 }
                 return print_r($mixed, 1);
             } elseif (is_array($mixed)) {
@@ -91,7 +111,7 @@ class Vardump
                 }
                 return $html . '</ul>';
             }
-            return '<span style="color: green">' . $mixed . '</span>';
+            return '<span style="color: green">' . $this->stringToSqlExplainer($mixed) . '</span>';
         } else {
             return 'not available';
         }
@@ -114,4 +134,35 @@ class Vardump
             <hr style="margin-bottom: 2rem;"/>
         ';
     }
+
+    protected function stringToSqlExplainer(string $string) : string
+    {
+        if($this->isSql($string)) {
+            foreach(self::SQL_PHRASES as $phrase) {
+                $string = str_replace(
+                    ' '.$phrase .' ',
+                    '<br /><br />'.$phrase . ' ',
+                    $string
+                );
+            }
+        }
+
+        return $string;
+    }
+
+    protected function isSql(string $string) : bool
+    {
+        $sqlCount = false;
+        foreach(self::SQL_PHRASES as $phrase) {
+            if(strpos($string, $phrase)) {
+                $sqlCount++;
+            }
+        }
+        if($sqlCount > 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
