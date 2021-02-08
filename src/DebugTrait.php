@@ -21,13 +21,14 @@ trait DebugTrait
     {
         if (Vardump::inst()->isSafe()) {
             $data = call_user_func_array([$this, $fieldName], $arguments ?: []);
-            return Vardump::inst()->vardumpMe($data, $method, static::class);
+            return Vardump::inst()->vardumpMe($data, $fieldName, $this->ClassName());
         }
     }
 
     /**
      * for debug purposes!
-     * @param string $method
+     * @param string  $method
+     * @param array   $arguments - optional
      */
     public function XML_val(?string $method, $arguments = [])
     {
@@ -36,7 +37,7 @@ trait DebugTrait
                 $arguments = [$arguments];
             }
             $data = $this->{$method}(...$arguments);
-            return Vardump::inst()->vardumpMe($data, $method, static::class);
+            return Vardump::inst()->vardumpMe($data, $method, $this->ClassName());
         }
     }
 

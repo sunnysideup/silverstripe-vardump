@@ -45,7 +45,7 @@ class Vardump
         return (Permission::check('ADMIN') && Director::isDev()) || Environment::getEnv('SS_VARDUMP_DEBUG_ALLOWED');
     }
 
-    public function vardumpMe($data, string $method, string $className)
+    public function vardumpMe($data, ?string $method = '', ?string $className = '')
     {
         if (Vardump::inst()->isSafe()) {
             $html = Vardump::inst()->mixedToUl($data) . $this->addMethodInformation($method, $className);
