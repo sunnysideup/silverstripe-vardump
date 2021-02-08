@@ -3,20 +3,18 @@
 namespace Sunnysideup\Vardump;
 
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\FieldType\DBField;
 
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
-use SilverStripe\Core\Environment;
 
 class Vardump
 {
-
-
     /**
      * @var array
      *            List of words to be replaced.
@@ -36,7 +34,7 @@ class Vardump
 
     public static function inst()
     {
-        if(self::$singleton === null) {
+        if (self::$singleton === null) {
             self::$singleton = new self();
         }
         return self::$singleton;
@@ -55,7 +53,6 @@ class Vardump
             return DBField::create_field('HTMLText', $html);
         }
     }
-
 
     public function mixedToUl($mixed): string
     {
@@ -76,12 +73,10 @@ class Vardump
                 } elseif ($mixed instanceof ArrayList) {
                     return $this->mixedToUl($mixed->toArray());
                 } elseif ($mixed instanceof DataList || $mixed instanceof PaginatedList) {
-                    return
-                        $this->mixedToUl($mixed->sql()) . '<hr />' .
+                    return $this->mixedToUl($mixed->sql()) . '<hr />' .
                         $this->mixedToUl($mixed->map('ID', 'Title')->toArray());
                 } elseif ($mixed instanceof DataObject) {
-                    return
-                        $mixed->i18n_singular_name() . ': ' . $mixed->getTitle() .
+                    return $mixed->i18n_singular_name() . ': ' . $mixed->getTitle() .
                         ' (' . $mixed->ClassName . ', ' . $mixed->ID . ')';
                 }
                 return print_r($mixed, 1);
@@ -112,9 +107,8 @@ class Vardump
                 return $html . '</ul>';
             }
             return '<span style="color: green">' . $this->stringToSqlExplainer($mixed) . '</span>';
-        } else {
-            return 'not available';
         }
+        return 'not available';
     }
 
     protected function isAssoc(array $arr)
@@ -135,13 +129,13 @@ class Vardump
         ';
     }
 
-    protected function stringToSqlExplainer(string $string) : string
+    protected function stringToSqlExplainer(string $string): string
     {
-        if($this->isSql($string)) {
-            foreach(self::SQL_PHRASES as $phrase) {
+        if ($this->isSql($string)) {
+            foreach (self::SQL_PHRASES as $phrase) {
                 $string = str_replace(
-                    ' '.$phrase .' ',
-                    '<br /><br />'.$phrase . ' ',
+                    ' ' . $phrase . ' ',
+                    '<br /><br />' . $phrase . ' ',
                     $string
                 );
             }
@@ -150,19 +144,17 @@ class Vardump
         return $string;
     }
 
-    protected function isSql(string $string) : bool
+    protected function isSql(string $string): bool
     {
         $sqlCount = false;
-        foreach(self::SQL_PHRASES as $phrase) {
-            if(strpos($string, $phrase)) {
+        foreach (self::SQL_PHRASES as $phrase) {
+            if (strpos($string, $phrase)) {
                 $sqlCount++;
             }
         }
-        if($sqlCount > 2) {
+        if ($sqlCount > 2) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
-
 }
