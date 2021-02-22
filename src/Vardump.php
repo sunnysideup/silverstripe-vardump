@@ -67,6 +67,14 @@ class Vardump
                 return '<span style="color: grey">[YES]</span>';
             } elseif ($mixed === null) {
                 return '<span style="color: grey">[NULL]</span>';
+            } elseif ($mixed === 0) {
+                return '<span style="color: green">[ZERO]</span>';
+            } elseif ($mixed === 1) {
+                return '<span style="color: green">[ONE]</span>';
+            } elseif (is_int($mixed)) {
+                return '<span style="color: green">'.$mixed.' (integer)</span>';
+            } elseif (is_float($mixed)) {
+                return '<span style="color: green">'.$mixed.' (float)</span>';
             } elseif ($mixed === '') {
                 return '<span style="color: grey">[EMPTY STRING]</span>';
             } elseif (is_array($mixed) && count($mixed) === 0) {
@@ -121,7 +129,7 @@ class Vardump
                 }
                 return '<span style="color: green">' . substr($mixed, 0, 300) . '</span>';
             } else {
-                return '<span style="color: red">[UNKNOWN OBJECT]</span>';
+                return '<span style="color: red">'.substr(print_r($mixed, 1), 0, 500).'</span>';
             }
         }
         return 'not available';
