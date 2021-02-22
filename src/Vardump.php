@@ -115,8 +115,14 @@ class Vardump
                     }
                     $html .= '<li style="' . $style . '">' . $keyString . $data . $after . '</li>';
                 }
+            } elseif(is_string($mixed)) {
+                if($this->isSql($mixed)) {
+                    $mixed = $this->stringToSqlExplainer($mixed);
+                }
+                return '<span style="color: green">' . substr($mixed, 0, 300) . '</span>';
+            } else {
+                return '<span style="color: red">[UNKNOWN OBJECT]</span>';
             }
-            return '<span style="color: green">' . $this->stringToSqlExplainer($mixed) . '</span>';
         }
         return 'not available';
     }
@@ -139,19 +145,16 @@ class Vardump
         ';
     }
 
-    protected function stringToSqlExplainer(string $string): string
+    protected function stringToSqlExplainer($string): string
     {
-        if ($this->isSql($string)) {
-            foreach (self::SQL_PHRASES as $phrase) {
-                $string = str_replace(
-                    ' ' . $phrase . ' ',
-                    '<br /><br />' . $phrase . ' ',
-                    $string
-                );
-            }
+        foreach (self::SQL_PHRASES as $phrase) {
+            $outcome = str_replace(
+                ' ' . $phrase . ' ',
+                '<br /><br />' . $phrase . ' ',
+                $string
+            );
         }
-
-        return $string;
+        return $outcome;
     }
 
     protected function isSql(string $string): bool
