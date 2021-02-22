@@ -72,9 +72,9 @@ class Vardump
             } elseif ($mixed === 1) {
                 return '<span style="color: green">[ONE]</span>';
             } elseif (is_int($mixed)) {
-                return '<span style="color: green">'.$mixed.' (integer)</span>';
+                return '<span style="color: green">'.$mixed.' [INTEGER]</span>';
             } elseif (is_float($mixed)) {
-                return '<span style="color: green">'.$mixed.' (float)</span>';
+                return '<span style="color: green">'.$mixed.' [FLOAT]</span>';
             } elseif ($mixed === '') {
                 return '<span style="color: grey">[EMPTY STRING]</span>';
             } elseif (is_array($mixed) && count($mixed) === 0) {
@@ -123,6 +123,10 @@ class Vardump
                     }
                     $html .= '<li style="' . $style . '">' . $keyString . $data . $after . '</li>';
                 }
+                $html .= '</ol>';
+
+                return $html;
+
             } elseif(is_string($mixed)) {
                 if($this->isSql($mixed)) {
                     $mixed = $this->stringToSqlExplainer($mixed);
@@ -132,7 +136,7 @@ class Vardump
                 return '<span style="color: red">'.substr(print_r($mixed, 1), 0, 500).'</span>';
             }
         }
-        return 'not available';
+        return '<span style="color: red">ERROR: no information available</span>';
     }
 
     protected function isAssoc(array $arr)
