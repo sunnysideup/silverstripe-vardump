@@ -96,19 +96,25 @@ class Vardump
                 $after = '';
                 $style = '';
                 $keyString = '';
-                $countStr = '';
                 if ($isLarge) {
                     $style = 'display: inline;';
                     $after = ', ';
                 }
-                $html .= '<ul>';
+                $html .= '<ol>';
+                $count = 0;
                 foreach ($mixed as $key => $item) {
+                    $count++;
                     if ($isAssoc) {
                         $keyString = '<strong>' . $key . '</strong>: ';
                     }
-                    $html .= '<li style="' . $style . '">' . $keyString . $countStr . $this->mixedToUl($item) . $after . '</li>';
+                    if($count > 20) {
+                        $data = '.';
+                        $keyString = '';
+                    } else {
+                        $data = $this->mixedToUl($item);
+                    }
+                    $html .= '<li style="' . $style . '">' . $keyString . $data . $after . '</li>';
                 }
-                return $html . '</ul>';
             }
             return '<span style="color: green">' . $this->stringToSqlExplainer($mixed) . '</span>';
         }
