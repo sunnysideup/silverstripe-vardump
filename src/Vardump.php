@@ -72,9 +72,9 @@ class Vardump
             } elseif ($mixed === 1) {
                 return '<span style="color: green">[ONE]</span>';
             } elseif (is_int($mixed)) {
-                return '<span style="color: green">'.$mixed.' [INTEGER]</span>';
+                return '<span style="color: green">'.$mixed.'</span>';
             } elseif (is_float($mixed)) {
-                return '<span style="color: green">'.$mixed.' [FLOAT]</span>';
+                return '<span style="color: green">'.$mixed.'</span>';
             } elseif ($mixed === '') {
                 return '<span style="color: grey">[EMPTY STRING]</span>';
             } elseif (is_array($mixed) && count($mixed) === 0) {
@@ -128,10 +128,11 @@ class Vardump
                 return $html;
 
             } elseif(is_string($mixed)) {
+                $isSql = '';
                 if($this->isSql($mixed)) {
-                    $mixed = $this->stringToSqlExplainer($mixed);
+                    $mixed = $this->stringToSqlExplainer($isSql.$mixed);
                 }
-                return '<span style="color: green">' . substr($mixed, 0, 300) . '</span>';
+                return '<span style="color: green">' . substr($mixed, 0, 10000) . '</span>';
             } else {
                 return '<span style="color: red">'.substr(print_r($mixed, 1), 0, 500).'</span>';
             }
@@ -159,21 +160,23 @@ class Vardump
 
     protected function stringToSqlExplainer($string): string
     {
+        $string = ' ' . $string . ' ';
+        $output = preg_replace('!\s+!', ' ', $string);
         foreach (self::SQL_PHRASES as $phrase) {
-            $outcome = str_replace(
-                ' ' . $phrase . ' ',
+            $output = str_replace(
+                $phrase,
                 '<br /><br />' . $phrase . ' ',
-                $string
+                $output
             );
         }
-        return $outcome;
+        return $output;
     }
 
     protected function isSql(string $string): bool
     {
-        $sqlCount = false;
+        $sqlCount = 0;
         foreach (self::SQL_PHRASES as $phrase) {
-            if (strpos($string, $phrase)) {
+            if (stripos($string, $phrase) !== false) {
                 $sqlCount++;
             }
         }
