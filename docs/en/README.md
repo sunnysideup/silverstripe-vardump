@@ -27,11 +27,19 @@ In templates, you can debug any variable or method like this:
 ```php
 
 use Sunnysideup\Vardump\DebugTrait;
+use Sunnysideup\Vardump\Vardump;
 
 Class MyClass
 {
 
     use DebugTrait;
+    
+    public function DebugMe(string $method)
+    {
+        if (Vardump::inst()->isSafe()) {
+            return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
+        }
+    }    
 }
 ```
 
