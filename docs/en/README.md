@@ -34,12 +34,6 @@ Class MyClass
 
     use DebugTrait;
     
-    public function DebugMe(string $method)
-    {
-        if (Vardump::inst()->isSafe()) {
-            return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
-        }
-    }    
 }
 ```
 
