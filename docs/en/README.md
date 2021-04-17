@@ -1,3 +1,7 @@
+# why this module?
+
+This module makes debugging faster in Silverstripe.  Especially, the ability to debug directly in templates will really help you understand issues faster. 
+
 # usage in php
 
 You can use it directly in PHP like this:
