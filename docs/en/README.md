@@ -31,7 +31,7 @@ Class MyClass
 }
 ```
 
-Then, in `MyTemplate.ss`, you can debug any variable / method from that variable like this:
+Then, in `MyTemplate.ss`, you can debug any Variable or Method from `MyClass` like this:
 
 
 ```ss
