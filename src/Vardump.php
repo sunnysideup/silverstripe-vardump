@@ -32,6 +32,11 @@ class Vardump
 
     protected static $singleton = null;
 
+    public static function now($data = null, ?string $method = '', ?string $className = '')
+    {
+        echo self::inst()->vardumpMe($data, $method, $className)->RAW();
+    }
+
     public static function inst()
     {
         if (self::$singleton === null) {
