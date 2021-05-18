@@ -9,6 +9,7 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
@@ -60,7 +61,10 @@ class Vardump
         if (Vardump::inst()->isSafe()) {
             $html = Vardump::inst()->mixedToUl($data) . $this->addMethodInformation($method, $className);
             return DBField::create_field('HTMLText', $html);
+        } elseif(Director::isDev()) {
+                return 'Error: please login';
         }
+        return '';
     }
 
     public function mixedToUl($mixed): string
@@ -90,7 +94,12 @@ class Vardump
                 } elseif ($mixed instanceof ArrayList) {
                     return $this->mixedToUl($mixed->toArray());
                 } elseif ($mixed instanceof DataList || $mixed instanceof PaginatedList) {
-                    return $this->mixedToUl($mixed->sql()) . '<hr />' .
+                    $parameters = null;
+                    $sql = $mixed->sql($parameters);
+                    $sql = DB::inline_parameters($sql, $parameters);
+                    $sql = str_replace('"', '`', $sql);
+                    return
+                        $this->mixedToUl($sql) . '<hr />' .
                         $this->mixedToUl($mixed->map('ID', 'Title')->toArray());
                 } elseif ($mixed instanceof DataObject) {
                     return $mixed->i18n_singular_name() . ': ' . $mixed->getTitle() .

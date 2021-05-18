@@ -43,15 +43,14 @@ trait DebugTrait
 
     public function VardumpMe(string $method)
     {
-        if (Vardump::inst()->isSafe()) {
-            return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
-        }
+        return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
     }
 
     public function ClassName(): string
     {
-        return '---------------'.static::class;
+        return static::class;
     }
+
     public function VardumpClassName(): string
     {
         return static::class;

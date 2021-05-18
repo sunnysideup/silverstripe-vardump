@@ -4,11 +4,9 @@ For classes that extend Viewable Data you can do this:
 use Sunnysideup\Vardump\Vardump;
 class MyClass extends WhateverWithViewableDataAsOneParentClass
 {
-    public function DebugMe($anything)
+    public function VardumpMe(string $method)
     {
-        if (Vardump::inst()->isSafe()) {
-            return Vardump::inst()->vardumpMe($this->{$method}(), $method, get_called_class());
-        }
+        return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
     }
 }
 ```
@@ -27,5 +25,14 @@ class MyClass
     //.....
 }
 
+
+```
+
+
+In the template you can then use:
+
+```ss
+
+$VardumpMe(VariableOrMethod)
 
 ```
