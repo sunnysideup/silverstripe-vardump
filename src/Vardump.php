@@ -35,7 +35,9 @@ class Vardump
 
     public static function now($data = null, ?string $method = '', ?string $className = '')
     {
+        echo '<div style="max-width: calc(100% - 20px); width:fit-content; margin: 20px auto;">';
         echo self::inst()->vardumpMe($data, $method, $className)->RAW();
+        echo '</div>';
     }
 
     public static function inst()
@@ -164,9 +166,26 @@ class Vardump
 
     protected function addMethodInformation($method, $className)
     {
+        $callers = debug_backtrace();
+        foreach($callers as $call) {
+            if($call['class'] !== static::class) {
+                break;
+            }
+        }
+        if(! $method) {
+            $method = $call['function'] ?? 'unknown_method';
+        }
+        if(! $className) {
+            $className = $call['class'] ?? 'unknown_class';
+        }
+        foreach($call as $key => $value) {
+            echo $key;
+        }
+        $args = $call['args'] ?? '';
+
         return '
             <div style="color: blue; font-size: 12px; margin-top: 0.7rem;">
-                ⇒' . $className . '::<strong>' . $method . '</strong>
+                ⇒' . $className . '::<strong>' . $method . '('.print_r($args, 1).')</strong>
             </div>
             <hr style="margin-bottom: 2rem;"/>
         ';
