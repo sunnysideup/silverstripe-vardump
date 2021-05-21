@@ -9,13 +9,13 @@ You can use it directly in PHP like this:
 ```php
 
 use Sunnysideup\Vardump\Vardump;
-
+use Page;
 Class MyClass
 {
     protected function foo()
     {
-        Vardump::now($var);
-        Vardump::inst()->mixedToUl($page->Children());
+        $page = Page::get();
+        Vardump::now($page->Children());
     }
 }
 ```
@@ -41,5 +41,5 @@ Then, in `MyTemplate.ss`, you can debug any Variable or Method from `MyClass` li
 
 
 ```ss
-    $DebugMe(MyMethodOrVariable);
+    $VardumpMe(MyMethodOrVariable);
 ```
