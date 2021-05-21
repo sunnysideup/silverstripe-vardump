@@ -14,8 +14,7 @@ Class MyClass
 {
     protected function foo()
     {
-        Vardump::now($var);
-        Vardump::inst()->mixedToUl($page->Children());
+        Vardump::now($page->Children());
     }
 }
 ```
@@ -41,5 +40,5 @@ Then, in `MyTemplate.ss`, you can debug any Variable or Method from `MyClass` li
 
 
 ```ss
-    $DebugMe(MyMethodOrVariable);
+    $VardumpMe(MyMethodOrVariable);
 ```
