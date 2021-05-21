@@ -9,11 +9,12 @@ You can use it directly in PHP like this:
 ```php
 
 use Sunnysideup\Vardump\Vardump;
-
+use Page;
 Class MyClass
 {
     protected function foo()
     {
+        $page = Page::get();
         Vardump::now($page->Children());
     }
 }
