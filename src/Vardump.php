@@ -178,9 +178,9 @@ class Vardump
         if(! $className) {
             $className = $call['class'] ?? 'unknown_class';
         }
-        foreach($call as $key => $value) {
-            echo $key;
-        }
+        // foreach($call as $key => $value) {
+        //     echo $key;
+        // }
         $args = $call['args'] ?? '';
 
         return '
