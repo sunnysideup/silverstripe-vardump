@@ -7,9 +7,8 @@ use SilverStripe\Core\Environment;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
-
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
@@ -18,7 +17,7 @@ class Vardump
 {
     /**
      * @var array
-     *            List of words to be replaced.
+     *            List of words to be replaced
      */
     private const SQL_PHRASES = [
         'SELECT',
@@ -42,9 +41,10 @@ class Vardump
 
     public static function inst()
     {
-        if (self::$singleton === null) {
+        if (null === self::$singleton) {
             self::$singleton = new self();
         }
+
         return self::$singleton;
     }
 
@@ -62,53 +62,71 @@ class Vardump
     {
         if (Vardump::inst()->isSafe()) {
             $html = Vardump::inst()->mixedToUl($data) . $this->addMethodInformation($method, $className);
+
             return DBField::create_field('HTMLText', $html);
-        } elseif(Director::isDev()) {
-                return 'Error: please login';
         }
+        if (Director::isDev()) {
+            return 'Error: please login';
+        }
+
         return '';
     }
 
     public function mixedToUl($mixed): string
     {
         if ($this->isSafe()) {
-            if ($mixed === false) {
+            if (false === $mixed) {
                 return '<span style="color: grey">[NO]</span>';
-            } elseif ($mixed === true) {
+            }
+            if (true === $mixed) {
                 return '<span style="color: grey">[YES]</span>';
-            } elseif ($mixed === null) {
+            }
+            if (null === $mixed) {
                 return '<span style="color: grey">[NULL]</span>';
-            } elseif ($mixed === 0) {
+            }
+            if (0 === $mixed) {
                 return '<span style="color: green">[ZERO]</span>';
-            } elseif ($mixed === 1) {
+            }
+            if (1 === $mixed) {
                 return '<span style="color: green">[ONE]</span>';
-            } elseif (is_int($mixed)) {
-                return '<span style="color: green">'.$mixed.'</span>';
-            } elseif (is_float($mixed)) {
-                return '<span style="color: green">'.$mixed.'</span>';
-            } elseif ($mixed === '') {
+            }
+            if (is_int($mixed)) {
+                return '<span style="color: green">' . $mixed . '</span>';
+            }
+            if (is_float($mixed)) {
+                return '<span style="color: green">' . $mixed . '</span>';
+            }
+            if ('' === $mixed) {
                 return '<span style="color: grey">[EMPTY STRING]</span>';
-            } elseif (is_array($mixed) && count($mixed) === 0) {
+            }
+            if (is_array($mixed) && 0 === count($mixed)) {
                 return '<span style="color: grey">[EMPTY ARRAY]</span>';
-            } elseif (is_object($mixed)) {
+            }
+            if (is_object($mixed)) {
                 if ($mixed instanceof ArrayData) {
                     return $this->mixedToUl($mixed->toMap());
-                } elseif ($mixed instanceof ArrayList) {
+                }
+                if ($mixed instanceof ArrayList) {
                     return $this->mixedToUl($mixed->toArray());
-                } elseif ($mixed instanceof DataList || $mixed instanceof PaginatedList) {
+                }
+                if ($mixed instanceof DataList || $mixed instanceof PaginatedList) {
                     $parameters = null;
                     $sql = $mixed->sql($parameters);
                     $sql = DB::inline_parameters($sql, $parameters);
                     $sql = str_replace('"', '`', $sql);
+
                     return
                         $this->mixedToUl($sql) . '<hr />' .
                         $this->mixedToUl($mixed->map('ID', 'Title')->toArray());
-                } elseif ($mixed instanceof DataObject) {
+                }
+                if ($mixed instanceof DataObject) {
                     return $mixed->i18n_singular_name() . ': ' . $mixed->getTitle() .
                         ' (' . $mixed->ClassName . ', ' . $mixed->ID . ')';
                 }
+
                 return print_r($mixed, 1);
-            } elseif (is_array($mixed)) {
+            }
+            if (is_array($mixed)) {
                 $html = '';
                 $isAssoc = $this->isAssoc($mixed);
                 $count = count($mixed);
@@ -127,11 +145,11 @@ class Vardump
                 $html .= '<ol>';
                 $count = 0;
                 foreach ($mixed as $key => $item) {
-                    $count++;
+                    ++$count;
                     if ($isAssoc) {
                         $keyString = '<strong>' . $key . '</strong>: ';
                     }
-                    if($count > 20) {
+                    if ($count > 20) {
                         $data = '.';
                         $keyString = '';
                     } else {
@@ -142,40 +160,43 @@ class Vardump
                 $html .= '</ol>';
 
                 return $html;
-
-            } elseif(is_string($mixed)) {
-                $isSql = '';
-                if($this->isSql($mixed)) {
-                    $mixed = $this->stringToSqlExplainer($isSql.$mixed);
-                }
-                return '<span style="color: green">' . substr($mixed, 0, 10000) . '</span>';
-            } else {
-                return '<span style="color: red">'.substr(print_r($mixed, 1), 0, 500).'</span>';
             }
+            if (is_string($mixed)) {
+                $isSql = '';
+                if ($this->isSql($mixed)) {
+                    $mixed = $this->stringToSqlExplainer($isSql . $mixed);
+                }
+
+                return '<span style="color: green">' . substr($mixed, 0, 10000) . '</span>';
+            }
+
+            return '<span style="color: red">' . substr(print_r($mixed, 1), 0, 500) . '</span>';
         }
+
         return '<span style="color: red">ERROR: no information available</span>';
     }
 
     protected function isAssoc(array $arr)
     {
-        if ($arr === []) {
+        if ([] === $arr) {
             return false;
         }
+
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
     protected function addMethodInformation($method, $className)
     {
         $callers = debug_backtrace();
-        foreach($callers as $call) {
-            if($call['class'] !== static::class) {
+        foreach ($callers as $call) {
+            if ($call['class'] !== static::class) {
                 break;
             }
         }
-        if(! $method) {
+        if (! $method) {
             $method = $call['function'] ?? 'unknown_method';
         }
-        if(! $className) {
+        if (! $className) {
             $className = $call['class'] ?? 'unknown_class';
         }
         // foreach($call as $key => $value) {
@@ -185,7 +206,7 @@ class Vardump
 
         return '
             <div style="color: blue; font-size: 12px; margin-top: 0.7rem;">
-                ⇒' . $className . '::<strong>' . $method . '('.print_r($args, 1).')</strong>
+                ⇒' . $className . '::<strong>' . $method . '(' . print_r($args, 1) . ')</strong>
             </div>
             <hr style="margin-bottom: 2rem;"/>
         ';
@@ -202,6 +223,7 @@ class Vardump
                 $output
             );
         }
+
         return $output;
     }
 
@@ -209,13 +231,14 @@ class Vardump
     {
         $sqlCount = 0;
         foreach (self::SQL_PHRASES as $phrase) {
-            if (stripos($string, $phrase) !== false) {
-                $sqlCount++;
+            if (false !== stripos($string, $phrase)) {
+                ++$sqlCount;
             }
         }
         if ($sqlCount > 2) {
             return true;
         }
+
         return false;
     }
 }

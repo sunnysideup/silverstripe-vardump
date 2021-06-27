@@ -12,23 +12,26 @@ trait DebugTrait
      * that have been specified.
      *
      * @param string $fieldName
-     * @param array $arguments
-     * @param bool $cache Cache this object
+     * @param array  $arguments
+     * @param bool   $cache     Cache this object
      * @param string $cacheName a custom cache name
-     * @return object|DBField
+     *
+     * @return DBField|object
      */
     public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null)
     {
         if (Vardump::inst()->isSafe()) {
             $data = call_user_func_array([$this, $fieldName], $arguments ?: []);
+
             return Vardump::inst()->vardumpMe($data, $fieldName, $this->VardumpClassName());
         }
     }
 
     /**
      * for debug purposes!
-     * @param string  $method
-     * @param array   $arguments - optional
+     *
+     * @param string $method
+     * @param array  $arguments - optional
      */
     public function XML_val(?string $method, $arguments = [])
     {
@@ -37,6 +40,7 @@ trait DebugTrait
                 $arguments = [$arguments];
             }
             $data = $this->{$method}(...$arguments);
+
             return Vardump::inst()->vardumpMe($data, $method, $this->VardumpClassName());
         }
     }
