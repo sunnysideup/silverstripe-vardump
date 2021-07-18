@@ -215,7 +215,7 @@ class Vardump
     protected function stringToSqlExplainer($string): string
     {
         $string = ' ' . $string . ' ';
-        $output = preg_replace('!\s+!', ' ', $string);
+        $output = preg_replace('#\s+#', ' ', $string);
         foreach (self::SQL_PHRASES as $phrase) {
             $output = str_replace(
                 $phrase,
@@ -235,10 +235,7 @@ class Vardump
                 ++$sqlCount;
             }
         }
-        if ($sqlCount > 2) {
-            return true;
-        }
 
-        return false;
+        return $sqlCount > 2;
     }
 }
