@@ -124,7 +124,7 @@ class Vardump
                         ' (' . $mixed->ClassName . ', ' . $mixed->ID . ')';
                 }
 
-                return print_r($mixed, 1);
+                return (string) print_r($mixed, 1);
             }
             if (is_array($mixed)) {
                 $html = '';
