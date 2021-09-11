@@ -30,7 +30,7 @@ class Vardump
         'LEFT JOIN',
     ];
 
-    protected static $singleton = null;
+    protected static $singleton;
 
     public static function now($data = null, ?string $method = '', ?string $className = '')
     {
