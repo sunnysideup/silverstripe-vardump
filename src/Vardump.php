@@ -125,7 +125,7 @@ class Vardump
                         ' (' . $mixed->ClassName . ', ' . $mixed->ID . ')';
                 }
 
-                return Debug::show($mixed)
+                return '<span style="color: red">' . substr(Debug::text($mixed), 0, 500) . '</span>';
             }
             if (is_array($mixed)) {
                 $html = '';
@@ -171,9 +171,7 @@ class Vardump
                 return '<span style="color: green">' . substr($mixed, 0, 10000) . '</span>';
             }
             
-            Debug::show($mixed);
-            
-            return '<span style="color: red">' . substr(print_r($mixed, 1), 0, 500) . '</span>';
+            return '<span style="color: red">' . substr(Debug::text($mixed), 0, 500) . '</span>';
         }
 
         return '<span style="color: red">ERROR: no information available</span>';
