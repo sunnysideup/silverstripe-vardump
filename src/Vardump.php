@@ -4,6 +4,7 @@ namespace Sunnysideup\Vardump;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
+use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -12,7 +13,6 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
-use SilverStripe\Dev\Debug;
 
 class Vardump
 {
@@ -170,7 +170,7 @@ class Vardump
 
                 return '<span style="color: green">' . substr($mixed, 0, 10000) . '</span>';
             }
-            
+
             return '<span style="color: red">' . substr(Debug::text($mixed), 0, 500) . '</span>';
         }
 
