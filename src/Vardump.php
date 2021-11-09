@@ -12,6 +12,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
+use SilverStripe\Dev\Debug;
 
 class Vardump
 {
@@ -124,7 +125,7 @@ class Vardump
                         ' (' . $mixed->ClassName . ', ' . $mixed->ID . ')';
                 }
 
-                return (string) print_r($mixed, 1);
+                return Debug::show($mixed)
             }
             if (is_array($mixed)) {
                 $html = '';
