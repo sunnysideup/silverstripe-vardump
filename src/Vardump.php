@@ -170,7 +170,9 @@ class Vardump
 
                 return '<span style="color: green">' . substr($mixed, 0, 10000) . '</span>';
             }
-
+            
+            Debug::show($mixed);
+            
             return '<span style="color: red">' . substr(print_r($mixed, 1), 0, 500) . '</span>';
         }
 
