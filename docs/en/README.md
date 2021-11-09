@@ -10,7 +10,8 @@ You can use it directly in PHP like this:
 
 use Sunnysideup\Vardump\Vardump;
 use Page;
-Class MyClass
+
+class MyClass
 {
     protected function foo()
     {
