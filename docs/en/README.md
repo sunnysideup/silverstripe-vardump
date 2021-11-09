@@ -15,7 +15,7 @@ class MyClass
 {
     protected function foo()
     {
-        $page = Page::get();
+        $page = Page::get()->first();
         Vardump::now($page->Children());
     }
 }
