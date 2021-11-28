@@ -10,6 +10,7 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
@@ -59,6 +60,13 @@ class Vardump
         return $this->vardumpMe($data, $method, $className)->raw();
     }
 
+    /**
+     *
+     * @param  mixed $data
+     * @param  string $method
+     * @param  string $className
+     * @return DBHTMLText|null
+     */
     public function vardumpMe($data, ?string $method = '', ?string $className = '')
     {
         if (Vardump::inst()->isSafe()) {
@@ -67,10 +75,10 @@ class Vardump
             return DBField::create_field('HTMLText', $html);
         }
         if (Director::isDev()) {
-            return 'Error: please login';
+            return DBField::create_field('HTMLText','Error: please login');
         }
 
-        return '';
+        return null;
     }
 
     public function mixedToUl($mixed): string
