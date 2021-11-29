@@ -61,11 +61,11 @@ class Vardump
     }
 
     /**
+     * @param mixed  $data
+     * @param string $method
+     * @param string $className
      *
-     * @param  mixed $data
-     * @param  string $method
-     * @param  string $className
-     * @return DBHTMLText|null
+     * @return null|DBHTMLText
      */
     public function vardumpMe($data, ?string $method = '', ?string $className = '')
     {
@@ -75,7 +75,7 @@ class Vardump
             return DBField::create_field('HTMLText', $html);
         }
         if (Director::isDev()) {
-            return DBField::create_field('HTMLText','Error: please login');
+            return DBField::create_field('HTMLText', 'Error: please login');
         }
 
         return null;

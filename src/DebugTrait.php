@@ -18,7 +18,7 @@ trait DebugTrait
      * @param bool   $cache     Cache this object
      * @param string $cacheName a custom cache name
      *
-     * @return DBField|null
+     * @return null|DBField
      */
     public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null)
     {
@@ -27,6 +27,7 @@ trait DebugTrait
 
             return Vardump::inst()->vardumpMe($data, $fieldName, $this->VardumpClassName());
         }
+
         return null;
     }
 
