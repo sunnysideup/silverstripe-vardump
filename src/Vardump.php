@@ -34,14 +34,16 @@ class Vardump
 
     protected static $singleton;
 
-    public static function formatted_variable($data = null) : string
+    public static function formatted_variable($data = null): string
     {
         $html = '';
         $html .= '<div style="max-width: calc(100% - 20px); width:fit-content; margin: 20px;">';
-        $html .=  self::inst()->mixedToUl($data);
-        $html .=  '</div>';
+        $html .= self::inst()->mixedToUl($data);
+        $html .= '</div>';
+
         return $html;
     }
+
     public static function now($data = null, ?string $method = '', ?string $className = '')
     {
         echo '<div style="max-width: calc(100% - 20px); width:fit-content; margin: 20px auto;">';
