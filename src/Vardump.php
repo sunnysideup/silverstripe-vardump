@@ -192,7 +192,7 @@ class Vardump
             return '<span style="color: red">' . substr(Debug::text($mixed), 0, 500) . '</span>';
         }
 
-        return '<span style="color: red">ERROR: no information available</span>';
+        return '<span style="color: red">ERROR: please turn on SS_VARDUMP_DEBUG_ALLOWED to see data.</span>';
     }
 
     protected function isAssoc(array $arr)
