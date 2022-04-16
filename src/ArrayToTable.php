@@ -8,7 +8,12 @@ class ArrayToTable
 
     public static function convert(array $array, $maxCols = 20, $maxRows = 200) : string
     {
-        $html = '<table>';
+        $html = '
+        <style>
+            .vardump-data-table td {padding: 2px;}
+        </style>
+        <table class="vardump-data-table" border="1">
+        ';
 
         $html .= '<tr>';
         $colCount = 0;
