@@ -28,6 +28,7 @@ class ArrayToTable
         $html .= '</tr>';
 
         // data rows
+        $rowCount = 0;
         foreach( $array as $key=>$value){
             if($rowCount < $maxRows) {
                 $rowCount++;
