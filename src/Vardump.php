@@ -15,6 +15,8 @@ use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
 
+use Sunnysideup\Vardump\ArrayToTable;
+
 class Vardump
 {
     /**
@@ -161,9 +163,14 @@ class Vardump
                     $style = 'display: inline;';
                     $after = ', ';
                 }
-                $html .= '<ol>';
+                $itemHTML = '<ol>';
                 $count = 0;
+                $itemHTML = '';
+                $flatArray = true;
                 foreach ($mixed as $key => $item) {
+                    if(is_array($item) || is_object($item)) {
+                        $flatArray = false;
+                    }
                     ++$count;
                     if ($isAssoc) {
                         $keyString = '<strong>' . $key . '</strong>: ';
@@ -172,13 +179,16 @@ class Vardump
                         $data = '.';
                         $keyString = '';
                     } else {
-                        $data = $this->mixedToUl($item);
+                        $mixed[$key] = $this->mixedToUl($item);
                     }
-                    $html .= '<li style="' . $style . '">' . $keyString . $data . $after . '</li>';
+                    $itemHTML .= '<li style="' . $style . '">' . $keyString . $mixed[$key] . $after . '</li>';
                 }
-                $html .= '</ol>';
-
-                return $html;
+                if($flatArray) {
+                    $itemHTML = ArrayToTable::convert($mixed, 10, 100);
+                } else {
+                    $itemHTML .= '</ol>';
+                }
+                return $html.$itemHTML;
             }
             if (is_string($mixed)) {
                 $isSql = '';
