@@ -17,7 +17,8 @@ class ArrayToTable
 
         $html .= '<tr>';
         $colCount = 0;
-        foreach($array[0] as $key=>$value){
+        $header = $array[0] ?? $array;
+        foreach($array[0] as $key => $value){
             $colCount++;
             if($colCount > $maxCols) {
                 $html .= '<th>...</th>';
