@@ -17,37 +17,45 @@ class ArrayToTable
 
         $html .= '<tr>';
         $colCount = 0;
-        $header = $array[0] ?? $array;
-        foreach($array[0] as $key => $value){
-            $colCount++;
-            if($colCount > $maxCols) {
-                $html .= '<th>...</th>';
-            } else {
-                $html .= '<th>' . htmlspecialchars($key) . '</th>';
-            }
-        }
-        $html .= '</tr>';
-
-        // data rows
-        $rowCount = 0;
-        foreach( $array as $key=>$value){
-            if($rowCount < $maxRows) {
-                $rowCount++;
-                $html .= '<tr>';
-                $colCount = 0;
-                foreach($value as $key2=>$value2){
-                    $colCount++;
-                    if($colCount > $maxCols) {
-                        $html .= '<td>...</td>';
-                    }
-                    $html .= '<td>' . htmlspecialchars($value2) . '</td>';
+        if (count($array)) {
+            $header = $array[0] ?? $array;
+            foreach($header as $key => $value){
+                $colCount++;
+                if($colCount > $maxCols) {
+                    $html .= '<th>...</th>';
+                } else {
+                    $html .= '<th>' . htmlspecialchars($key) . '</th>';
                 }
-                $html .= '</tr>';
             }
-        }
-        $html .= '</table>';
-        if($rowCount === $maxRows) {
-            $html = '<p>not all rows shown</p>';
+            $html .= '</tr>';
+
+            // data rows
+            $rowCount = 0;
+            foreach( $array as $key => $value){
+                if($rowCount < $maxRows) {
+                    $rowCount++;
+                    $html .= '<tr>';
+                    $colCount = 0;
+                    if( is_array($value)) {
+                        foreach($value as $key2 => $value2){
+                            $colCount++;
+                            if($colCount > $maxCols) {
+                                $html .= '<td>...</td>';
+                            }
+                            $html .= '<td>' . htmlspecialchars($value2) . '</td>';
+                        }
+                    } else {
+                        $html .= '<td>'.$value.'</td>';
+                    }
+                    $html .= '</tr>';
+                }
+            }
+            $html .= '</table>';
+            if($rowCount === $maxRows) {
+                $html = '<p>not all rows shown</p>';
+            }
+        } else {
+            $html = '<p>no data available</p>';
         }
 
         return $html;
