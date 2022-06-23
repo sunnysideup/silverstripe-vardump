@@ -178,7 +178,8 @@ class Vardump
                     if ($count > 20) {
                         $data = '.';
                         $keyString = '';
-                    } else {
+                    }
+                    if(! $flatArray) {
                         $mixed[$key] = $this->mixedToUl($item);
                     }
                     $itemHTML .= '<li style="' . $style . '">' . $keyString . $mixed[$key] . $after . '</li>';
