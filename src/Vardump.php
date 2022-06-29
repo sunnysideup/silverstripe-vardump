@@ -15,8 +15,6 @@ use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
 
-use Sunnysideup\Vardump\ArrayToTable;
-
 class Vardump
 {
     /**
@@ -41,9 +39,8 @@ class Vardump
         $html = '';
         $html .= '<div style="max-width: calc(100% - 20px); width:fit-content; margin: 20px;">';
         $html .= self::inst()->mixedToUl($data);
-        $html .= '</div>';
 
-        return $html;
+        return $html . '</div>';
     }
 
     public static function now($data = null, ?string $method = '', ?string $className = '')
@@ -86,6 +83,7 @@ class Vardump
 
             return DBField::create_field('HTMLText', $html);
         }
+
         if (Director::isDev()) {
             return DBField::create_field('HTMLText', 'Error: please login');
         }
@@ -99,37 +97,48 @@ class Vardump
             if (false === $mixed) {
                 return '<span style="color: grey">[NO]</span>';
             }
+
             if (true === $mixed) {
                 return '<span style="color: grey">[YES]</span>';
             }
+
             if (null === $mixed) {
                 return '<span style="color: grey">[NULL]</span>';
             }
+
             if (0 === $mixed) {
                 return '<span style="color: green">[ZERO]</span>';
             }
+
             if (1 === $mixed) {
                 return '<span style="color: green">[ONE]</span>';
             }
+
             if (is_int($mixed)) {
                 return '<span style="color: green">' . $mixed . '</span>';
             }
+
             if (is_float($mixed)) {
                 return '<span style="color: green">' . $mixed . '</span>';
             }
+
             if ('' === $mixed) {
                 return '<span style="color: grey">[EMPTY STRING]</span>';
             }
-            if (is_array($mixed) && 0 === count($mixed)) {
+
+            if (is_array($mixed) && [] === $mixed) {
                 return '<span style="color: grey">[EMPTY ARRAY]</span>';
             }
+
             if (is_object($mixed)) {
                 if ($mixed instanceof ArrayData) {
                     return $this->mixedToUl($mixed->toMap());
                 }
+
                 if ($mixed instanceof ArrayList) {
                     return $this->mixedToUl($mixed->toArray());
                 }
+
                 if ($mixed instanceof DataList || $mixed instanceof PaginatedList) {
                     $parameters = null;
                     $sql = $mixed->sql($parameters);
@@ -140,6 +149,7 @@ class Vardump
                         $this->mixedToUl($sql) . '<hr />' .
                         $this->mixedToUl($mixed->map('ID', 'Title')->toArray());
                 }
+
                 if ($mixed instanceof DataObject) {
                     return $mixed->i18n_singular_name() . ': ' . $mixed->getTitle() .
                         ' (' . $mixed->ClassName . ', ' . $mixed->ID . ')';
@@ -147,6 +157,7 @@ class Vardump
 
                 return '<span style="color: red">' . substr(Debug::text($mixed), 0, 500) . '</span>';
             }
+
             if (is_array($mixed)) {
                 $html = '';
                 $isAssoc = $this->isAssoc($mixed);
@@ -156,6 +167,7 @@ class Vardump
                     $html .= '' . count($mixed) . ' entries ... ';
                     $isLarge = count($mixed) > 20;
                 }
+
                 $after = '';
                 $style = '';
                 $keyString = '';
@@ -163,34 +175,42 @@ class Vardump
                     $style = 'display: inline;';
                     $after = ', ';
                 }
+
                 $itemHTML = '<ol>';
                 $count = 0;
                 $itemHTML = '';
                 $flatArray = true;
                 foreach ($mixed as $key => $item) {
-                    if(is_array($item) || is_object($item)) {
+                    if (is_array($item) || is_object($item)) {
                         $flatArray = false;
                     }
+
                     ++$count;
                     if ($isAssoc) {
                         $keyString = '<strong>' . $key . '</strong>: ';
                     }
+
                     if ($count > 20) {
                         $data = '.';
                         $keyString = '';
                     }
-                    if(! $flatArray) {
+
+                    if (! $flatArray) {
                         $mixed[$key] = $this->mixedToUl($item);
                     }
+
                     $itemHTML .= '<li style="' . $style . '">' . $keyString . $mixed[$key] . $after . '</li>';
                 }
-                if($flatArray) {
+
+                if ($flatArray) {
                     $itemHTML = ArrayToTable::convert($mixed, 10, 100);
                 } else {
                     $itemHTML .= '</ol>';
                 }
-                return $html.$itemHTML;
+
+                return $html . $itemHTML;
             }
+
             if (is_string($mixed)) {
                 $isSql = '';
                 if ($this->isSql($mixed)) {
@@ -223,12 +243,15 @@ class Vardump
                 break;
             }
         }
+
         if (! $method) {
             $method = $call['function'] ?? 'unknown_method';
         }
+
         if (! $className) {
             $className = $call['class'] ?? 'unknown_class';
         }
+
         // foreach($call as $key => $value) {
         //     echo $key;
         // }

@@ -2,16 +2,14 @@
 
 namespace Sunnysideup\Vardump;
 
-
 class ArrayToTable
 {
-
-    public static function convert(array $array, $maxCols = 20, $maxRows = 20) : string
+    public static function convert(array $array, $maxCols = 20, $maxRows = 20): string
     {
         $maxRows = 9999999999;
         $html = '';
         $rowCount = 0;
-        if (count($array)) {
+        if ([] !== $array) {
             $html = '
             <style>
                 .vardump-data-table {
@@ -26,51 +24,54 @@ class ArrayToTable
             </style>
             <table class="vardump-data-table" border="1">
             ';
-            if(self::isMultiDimensionalArray($array)) {
+            if (self::isMultiDimensionalArray($array)) {
                 $header = $array[0] ?? $array;
                 $html .= '<tr>';
                 $colCount = 0;
-                foreach($header as $key => $value){
-                    $colCount++;
-                    if($colCount < $maxCols) {
+                foreach ($header as $key => $value) {
+                    ++$colCount;
+                    if ($colCount < $maxCols) {
                         $html .= '<th>' . htmlspecialchars($key) . '</th>';
                     } else {
                         $html .= '<th>...</th>';
                     }
                 }
+
                 $html .= '</tr>';
                 // data rows
 
-                foreach( $array as $key => $value){
-                    if($rowCount < $maxRows) {
-                        $rowCount++;
+                foreach ($array as $key => $value) {
+                    if ($rowCount < $maxRows) {
+                        ++$rowCount;
                         $colCount = 0;
                         $html .= '<tr>';
-                        foreach($value as $key2 => $value2){
-                            $colCount++;
-                            if($colCount < $maxCols) {
+                        foreach ($value as $key2 => $value2) {
+                            ++$colCount;
+                            if ($colCount < $maxCols) {
                                 $html .= '<td>' . strip_tags($value2) . '</td>';
                             } else {
                                 $html .= '<td>...</td>';
                             }
                         }
+
                         $html .= '</tr>';
                     }
                 }
             } else {
-                foreach ( $array as $key => $value){
-                    if($rowCount < $maxRows) {
-                        $rowCount++;
+                foreach ($array as $key => $value) {
+                    if ($rowCount < $maxRows) {
+                        ++$rowCount;
                         $html .= '
                             <tr>
-                                <th>'.$key.'</th>
+                                <th>' . $key . '</th>
                                 <td>' . strip_tags($value) . '</td>
                             </tr>';
                     }
                 }
             }
+
             $html .= '</table>';
-            if($rowCount === $maxRows) {
+            if ($rowCount === $maxRows) {
                 $html .= '<p>not all rows shown</p>';
             }
         } else {
@@ -80,9 +81,8 @@ class ArrayToTable
         return $html;
     }
 
-    protected static function isMultiDimensionalArray(array $array) : bool
+    protected static function isMultiDimensionalArray(array $array): bool
     {
-        return (count($array) !== count($array, COUNT_RECURSIVE));
+        return count($array) !== count($array, COUNT_RECURSIVE);
     }
-
 }

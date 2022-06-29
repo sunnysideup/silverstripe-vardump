@@ -43,6 +43,7 @@ trait DebugTrait
             if (! is_array($arguments)) {
                 $arguments = [$arguments];
             }
+
             $data = $this->{$method}(...$arguments);
 
             return Vardump::inst()->vardumpMe($data, $method, $this->VardumpClassName());
