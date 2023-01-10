@@ -78,17 +78,19 @@ class Vardump
      */
     public function vardumpMe($data, ?string $method = '', ?string $className = '')
     {
+        $obj = null;
         if (Vardump::inst()->isSafe()) {
             $html = Vardump::inst()->mixedToUl($data) . $this->addMethodInformation($method, $className);
-
-            return DBField::create_field('HTMLText', $html);
+            /** @var DBHTMLText $obj */
+            $obj = DBHTMLText::create_field('HTMLText', $html);
         }
 
         if (Director::isDev()) {
-            return DBField::create_field('HTMLText', 'Error: please login');
+            /** @var DBHTMLText $obj */
+            $obj = DBHTMLText::create_field('HTMLText', 'Error: please login');
         }
 
-        return null;
+        return $obj;
     }
 
     public function mixedToUl($mixed): string
