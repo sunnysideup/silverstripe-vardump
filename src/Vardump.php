@@ -219,7 +219,7 @@ class Vardump
                     $mixed = $this->stringToSqlExplainer($isSql . $mixed);
                 }
 
-                return '<span style="color: green">' . substr($mixed, 0, 10000) . '</span>';
+                return '<span style="color: green">' . substr((string) $mixed, 0, 10000) . '</span>';
             }
 
             return '<span style="color: red">' . substr(Debug::text($mixed), 0, 500) . '</span>';
