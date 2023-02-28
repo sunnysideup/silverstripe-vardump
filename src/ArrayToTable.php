@@ -48,7 +48,7 @@ class ArrayToTable
                         foreach ($value as $key2 => $value2) {
                             ++$colCount;
                             if ($colCount < $maxCols) {
-                                $html .= '<td>' . strip_tags($value2) . '</td>';
+                                $html .= '<td>' . strip_tags( (string) $value2) . '</td>';
                             } else {
                                 $html .= '<td>...</td>';
                             }
@@ -64,7 +64,7 @@ class ArrayToTable
                         $html .= '
                             <tr>
                                 <th>' . $key . '</th>
-                                <td>' . strip_tags($value) . '</td>
+                                <td>' . strip_tags( (string) $value) . '</td>
                             </tr>';
                     }
                 }
