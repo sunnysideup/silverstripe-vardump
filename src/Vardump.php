@@ -60,7 +60,7 @@ class Vardump
 
     public function isSafe(): bool
     {
-        return (Permission::check('ADMIN') && Director::isDev()) || Environment::getEnv('SS_VARDUMP_DEBUG_ALLOWED');
+        return (Permission::check('ADMIN') && (Director::isDev() || Environment::getEnv('SS_VARDUMP_DEBUG_ALLOWED')));
     }
 
     public function vardumpMeRaw($data, ?string $method = '', ?string $className = '')
