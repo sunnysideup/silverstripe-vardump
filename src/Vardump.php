@@ -82,9 +82,7 @@ class Vardump
             $html = Vardump::inst()->mixedToUl($data) . $this->addMethodInformation($method, $className);
             /** @var DBHTMLText $obj */
             $obj = DBHTMLText::create_field('HTMLText', $html);
-        }
-
-        if (Director::isDev()) {
+        } elseif (Director::isDev()) {
             /** @var DBHTMLText $obj */
             $obj = DBHTMLText::create_field('HTMLText', 'Error: please login');
         }
@@ -196,7 +194,7 @@ class Vardump
                         $keyString = '';
                     }
 
-                    if (! $flatArray) {
+                    if (!$flatArray) {
                         $mixed[$key] = $this->mixedToUl($item);
                     }
 
@@ -245,11 +243,11 @@ class Vardump
             }
         }
 
-        if (! $method) {
+        if (!$method) {
             $method = $call['function'] ?? 'unknown_method';
         }
 
-        if (! $className) {
+        if (!$className) {
             $className = $call['class'] ?? 'unknown_class';
         }
 
