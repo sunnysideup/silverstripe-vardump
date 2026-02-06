@@ -40,12 +40,12 @@ class ArrayToTable
                 $html .= '</tr>';
                 // data rows
 
-                foreach ($array as $key => $value) {
+                foreach ($array as $value) {
                     if ($rowCount < $maxRows) {
                         ++$rowCount;
                         $colCount = 0;
                         $html .= '<tr>';
-                        foreach ($value as $key2 => $value2) {
+                        foreach ($value as $value2) {
                             ++$colCount;
                             if ($colCount < $maxCols) {
                                 $html .= '<td>' . strip_tags( (string) $value2) . '</td>';
