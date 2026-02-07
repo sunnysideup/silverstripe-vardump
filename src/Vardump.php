@@ -70,8 +70,6 @@ class Vardump
 
     /**
      * @param mixed  $data
-     * @param string $method
-     * @param string $className
      *
      * @return null|DBHTMLText
      */
@@ -144,8 +142,7 @@ class Vardump
                     $sql = DB::inline_parameters($sql, $parameters);
                     $sql = str_replace('"', '`', $sql);
 
-                    return
-                        $this->mixedToUl($sql) . '<hr />' .
+                    return $this->mixedToUl($sql) . '<hr />' .
                         $this->mixedToUl($mixed->map('ID', 'Title')->toArray());
                 }
 
@@ -194,7 +191,7 @@ class Vardump
                         $keyString = '';
                     }
 
-                    if (!$flatArray) {
+                    if (! $flatArray) {
                         $mixed[$key] = $this->mixedToUl($item);
                     }
 
@@ -243,11 +240,11 @@ class Vardump
             }
         }
 
-        if (!$method) {
+        if (! $method) {
             $method = $call['function'] ?? 'unknown_method';
         }
 
-        if (!$className) {
+        if (! $className) {
             $className = $call['class'] ?? 'unknown_class';
         }
 

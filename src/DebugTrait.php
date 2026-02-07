@@ -34,7 +34,6 @@ trait DebugTrait
     /**
      * for debug purposes!
      *
-     * @param string $method
      * @param array  $arguments - optional
      */
     public function XML_val(?string $method, $arguments = [])
