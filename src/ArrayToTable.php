@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Vardump;
 
 class ArrayToTable
@@ -31,7 +33,7 @@ class ArrayToTable
                 foreach ($header as $key => $value) {
                     ++$colCount;
                     if ($colCount < $maxCols) {
-                        $html .= '<th>' . htmlspecialchars($key) . '</th>';
+                        $html .= '<th>' . htmlspecialchars((string) $key) . '</th>';
                     } else {
                         $html .= '<th>...</th>';
                     }

@@ -2,17 +2,17 @@
 
 namespace Sunnysideup\Vardump;
 
+use SilverStripe\Model\ArrayData;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\List\PaginatedList;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\Debug;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Permission;
-use SilverStripe\View\ArrayData;
 
 class Vardump
 {
@@ -20,7 +20,7 @@ class Vardump
      * @var array
      *            List of words to be replaced
      */
-    private const SQL_PHRASES = [
+    private const array SQL_PHRASES = [
         'SELECT',
         'FROM',
         'WHERE',
